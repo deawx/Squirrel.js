@@ -65,7 +65,7 @@ gulp.task('uglify', ['clean'], function () {
 // Register the default task
 gulp.task('build', ['jshint', 'saas', 'uglify']);
 
-// Watch for changes to the main file
+// Watch for changes to the js and scss files
 gulp.task('default', function () {
     gulp.watch('./' + Assets.css.main, ['saas']);
     gulp.watch('./' + Assets.js.main, ['jshint', 'uglify']);
