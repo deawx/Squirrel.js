@@ -9,6 +9,7 @@
   "devDependencies": {
     "del": "~1.2.1",
     "gulp": "~3.9.0",
+    "gulp-jsbeautifier": "^1.0.1",
     "gulp-jshint": "~1.11.2",
     "gulp-rename": "~1.2.2",
     "gulp-sass": "^2.0.4",

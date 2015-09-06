@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
+var prettify = require('gulp-jsbeautifier');
 var rename = require('gulp-rename');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
@@ -24,14 +25,24 @@ gulp.task('clean', function (cb) {
     del([Assets.js.minified], cb);
 });
 
-// Check the code meets the following standards outlined in .jshintrc
+// Check the main js file meets the following standards outlined in .jshintrc
 gulp.task('jshint', function () {
     return gulp.src('./' + Assets.js.main)
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-// Compile the saas stylesheet
+// Prettify the main js file
+gulp.task('prettify-js', function () {
+    gulp.src(Assets.js.main)
+        .pipe(prettify({
+            config: '.jsbeautifyrc',
+            mode: 'VERIFY_AND_WRITE'
+        }))
+        .pipe(gulp.dest('./'));
+});
+
+// Compile the main scss (saas) stylesheet
 gulp.task('saas', function () {
     return gulp.src(Assets.css.main)
         .pipe(sass({
@@ -42,7 +53,7 @@ gulp.task('saas', function () {
         .pipe(gulp.dest('./'));
 });
 
-// Uglify aka minify the main file
+// Uglify aka minify the main js file
 gulp.task('uglify', ['clean'], function () {
     return gulp.src('./' + Assets.js.main)
         .pipe(uglify({
@@ -71,6 +82,7 @@ gulp.task('default', function () {
     gulp.watch('./' + Assets.js.main, ['jshint', 'uglify']);
 });
 
-// 'gulp jshint' to check the syntax
-// 'gulp saas' to compile the saas file
-// 'gulp uglify' to uglify the main file
+// 'gulp jshint' to check the syntax of the main js file
+// 'gulp prettify-js' to prettify the main js file
+// 'gulp saas' to compile the main scss (saas) file
+// 'gulp uglify' to uglify the main js file
