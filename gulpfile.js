@@ -74,7 +74,7 @@ gulp.task('uglify', ['clean'], function () {
 });
 
 // Register the default task
-gulp.task('build', ['jshint', 'saas', 'uglify']);
+gulp.task('build', ['jshint', 'saas', 'uglify', 'prettify-js']);
 
 // Watch for changes to the js and scss files
 gulp.task('default', function () {
@@ -82,6 +82,7 @@ gulp.task('default', function () {
     gulp.watch('./' + Assets.js.main, ['jshint', 'uglify']);
 });
 
+// 'gulp build' to invoke all tasks above
 // 'gulp jshint' to check the syntax of the main js file
 // 'gulp prettify-js' to prettify the main js file
 // 'gulp saas' to compile the main scss (saas) file
