@@ -10,6 +10,12 @@ var uglify = require('gulp-uglify');
 var del = require('del');
 var fs = require('fs');
 
+// See the saas documentation for more details
+var saasSettings = {
+    // Options are 'nested', 'compact', 'compressed', 'expanded'
+    outputStyle: 'compressed'
+};
+
 // See the uglify documentation for more details
 var uglifySettings = {
     compress: {
@@ -60,10 +66,7 @@ gulp.task('prettify-js', function () {
 // Compile the main scss (saas) stylesheet
 gulp.task('saas', function () {
     return gulp.src(Assets.css.main)
-        .pipe(sass({
-            // Options are 'nested', 'compact', 'compressed', 'expanded'
-            outputStyle: 'compressed'
-        }))
+        .pipe(sass(saasSettings))
         .pipe(rename(Assets.css.compiled))
         .pipe(gulp.dest('./'));
 });
