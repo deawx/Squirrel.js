@@ -10,6 +10,18 @@ var uglify = require('gulp-uglify');
 var del = require('del');
 var fs = require('fs');
 
+// See the uglify documentation for more details
+var uglifySettings = {
+    compress: {
+        comparisons: true,
+        conditionals: true,
+        dead_code: true,
+        drop_console: true,
+        unsafe: true,
+        unused: true
+    }
+};
+
 // Assets for the project
 var Assets = {
     css: {
@@ -32,7 +44,7 @@ gulp.task('clean', function (cb) {
 gulp.task('jshint', function () {
     return gulp.src('./' + Assets.js.main)
         .pipe(jshint())
-        .pipe(jshint.reporter('default'));
+        .pipe(jshint.reporter('jshint-stylish'));
 });
 
 // Prettify the main js file
@@ -59,20 +71,8 @@ gulp.task('saas', function () {
 // Uglify aka minify the main js file
 gulp.task('uglify', function () {
     return gulp.src('./' + Assets.js.main)
-        .pipe(uglify({
-            // See the uglify documentation for more details
-            compress: {
-                comparisons: true,
-                conditionals: true,
-                dead_code: true,
-                drop_console: true,
-                unsafe: true,
-                unused: true
-            }
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
+        .pipe(uglify(uglifySettings))
+        .pipe(rename(Assets.js.minified))
         .pipe(gulp.dest('./'));
 });
 
