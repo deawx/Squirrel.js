@@ -4,9 +4,11 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var prettify = require('gulp-jsbeautifier');
 var rename = require('gulp-rename');
+var replace = require('gulp-replace');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var del = require('del');
+var fs = require('fs');
 
 // Assets for the project
 var Assets = {
@@ -17,7 +19,8 @@ var Assets = {
     js: {
         main: 'jquery.squirrel.js',
         minified: 'jquery.squirrel.min.js'
-    }
+    },
+    package: 'package.json'
 };
 
 // Clean the current directory
@@ -54,7 +57,7 @@ gulp.task('saas', function () {
 });
 
 // Uglify aka minify the main js file
-gulp.task('uglify', ['clean'], function () {
+gulp.task('uglify', function () {
     return gulp.src('./' + Assets.js.main)
         .pipe(uglify({
             // See the uglify documentation for more details
@@ -73,13 +76,30 @@ gulp.task('uglify', ['clean'], function () {
         .pipe(gulp.dest('./'));
 });
 
+// Update version numbers based on the main file version comment
+gulp.task('version', function () {
+    // SemVer matching is done using (?:\d+\.){2}\d+
+
+    var reVersion = /\n\s*\*\s+Version:\s+((?:\d+\.){2}\d+)/;
+    var version = fs.readFileSync('./' + Assets.js.main, {
+            encoding: 'utf8'
+        })
+        // Match is found in the 2nd element
+        .match(reVersion)[1];
+
+    // package.json version property
+    return gulp.src('./' + Assets.package)
+        .pipe(replace(/"version":\s+"(?:\d+\.){2}\d+",/, '"version": "' + version + '",'))
+        .pipe(gulp.dest('./'));
+});
+
 // Register the default task
-gulp.task('build', ['jshint', 'saas', 'uglify', 'prettify-js']);
+gulp.task('build', ['jshint', 'saas', 'version', 'clean', 'uglify', 'prettify-js']);
 
 // Watch for changes to the js and scss files
 gulp.task('default', function () {
     gulp.watch('./' + Assets.css.main, ['saas']);
-    gulp.watch('./' + Assets.js.main, ['jshint', 'uglify']);
+    gulp.watch('./' + Assets.js.main, ['version', 'jshint', 'clean', 'uglify']);
 });
 
 // 'gulp build' to invoke all tasks above
@@ -87,3 +107,4 @@ gulp.task('default', function () {
 // 'gulp prettify-js' to prettify the main js file
 // 'gulp saas' to compile the main scss (saas) file
 // 'gulp uglify' to uglify the main js file
+// 'gulp version' to update the version numbers based on the main js file version comment
