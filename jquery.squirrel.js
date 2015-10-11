@@ -52,7 +52,7 @@
             }
 
             // check the action is valid and convert to uppercase.
-            action = isString(action) && /^(?:CLEAR|REMOVE|OFF|STOP)$/i.test(action) ? action.toUpperCase() : 'START';
+            action = isString(action) && _regExp.ACTION.test(action) ? action.toUpperCase() : 'START';
 
             // strings related to the find functions and event handling.
             var eventFields = 'input[type!=file]:not(.squirrel-ignore), select:not(.squirrel-ignore), textarea:not(.squirrel-ignore)';
@@ -261,6 +261,11 @@
         } // end plugin function.
 
     }); // end jQuery extend.
+
+    // REGULAR EXPRESSIONS
+    var _regExp = {
+        ACTION: /^(?:CLEAR|REMOVE|OFF|STOP)$/i
+    };
 
     // METHODS
 
