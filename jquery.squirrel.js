@@ -89,9 +89,9 @@
                         case 'STOP':
 
                             // stop the registered events if a 'stop' action is passed.
-                            $form.find(eventFields).off('blur.squirrel.js keyup.squirrel.js change.squirrel.js');
-                            $form.find(eventReset).off('click.squirrel.js');
-                            $form.off('submit.squirrel.js');
+                            $form.find(eventFields).off(_events.CHANGE);
+                            $form.find(eventReset).off(_events.CLICK);
+                            $form.off(_events.SUBMIT);
                             break;
 
                         default:
@@ -204,7 +204,7 @@
 
                             // UPDATE VALUES FOR ALL FIELDS ON CHANGE.
                             // track changes in fields and store values as they're typed.
-                            $form.find(eventFields).on('blur.squirrel.js keyup.squirrel.js change.squirrel.js', function onEvent() {
+                            $form.find(eventFields).on(_events.CHANGE, function onEvent() {
 
                                 // cache the jQuery object.
                                 var $element = $(this);
@@ -234,14 +234,14 @@
                             });
 
                             // when the reset button is clicked, clear the storage.
-                            $form.find(eventReset).on('click.squirrel.js', function onClick() {
+                            $form.find(eventReset).on(_events.CLICK, function onClick() {
 
                                 unstash(storage, storageKey);
 
                             });
 
                             // clear the storage on submit.
-                            $form.on('submit.squirrel.js', function onClick() {
+                            $form.on(_events.SUBMIT, function onClick() {
 
                                 // if not a boolean datatype or is equal to true, then clear the storage.
                                 if (!isBoolean(options.clearOnSubmit) || options.clearOnSubmit) {
@@ -261,6 +261,13 @@
             } // end plugin function.
 
     }); // end jQuery extend.
+
+    // EVENTS
+    var _events = {
+        CLICK: 'click.squirrel.js',
+        CHANGE: 'blur.squirrel.js keyup.squirrel.js change.squirrel.js',
+        SUBMIT: 'submit.squirrel.js'
+    };
 
     // REGULAR EXPRESSIONS
     var _regExp = {
