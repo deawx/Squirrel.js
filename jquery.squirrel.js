@@ -179,7 +179,7 @@
 
                                     if (value !== null) {
 
-                                        $.each(!$.isArray(value) ? [value] : value, function eachValue(index, option) {
+                                        $.each(($.isArray(value) ? value : [value]), function eachValue(index, option) {
 
                                             $element.find('option').filter(function eachOption() {
 
@@ -375,3 +375,4 @@
     });
 
 })(this, this.jQuery);
+
