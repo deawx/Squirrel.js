@@ -382,4 +382,3 @@
     });
 
 })(this, this.jQuery);
-
