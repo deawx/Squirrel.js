@@ -376,7 +376,7 @@
     // onload.
     $(function () {
 
-        // load all forms that have the squirrel class  or data-squirrel attribute associated with them.
+        // load all forms that have the squirrel class or data-squirrel attribute associated with them.
         $('form.squirrel, form[data-squirrel]').squirrel();
 
     });
