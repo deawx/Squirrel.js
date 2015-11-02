@@ -13,7 +13,7 @@ var fs = require('fs');
 // See the saas documentation for more details
 var saasSettings = {
     // Options are 'nested', 'compact', 'compressed', 'expanded'
-    outputStyle: 'compressed'
+    outputStyle: 'compressed',
 };
 
 // See the uglify documentation for more details
@@ -26,47 +26,47 @@ var uglifySettings = {
         drop_console: true,
         /* jscs: enable */
         unsafe: true,
-        unused: true
-    }
+        unused: true,
+    },
 };
 
 // Assets for the project
 var Assets = {
     css: {
         main: 'example.scss',
-        compiled: 'example.css'
+        compiled: 'example.css',
     },
     js: {
         main: 'jquery.squirrel.js',
-        minified: 'jquery.squirrel.min.js'
+        minified: 'jquery.squirrel.min.js',
     },
-    package: 'package.json'
+    package: 'package.json',
 };
 
 // Clean the current directory
-gulp.task('clean', function (cb) {
+gulp.task('clean', function(cb) {
     del([Assets.js.minified], cb);
 });
 
 // Check the main js file meets the following standards outlined in .jshintrc
-gulp.task('jshint', function () {
+gulp.task('jshint', function() {
     return gulp.src('./' + Assets.js.main)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'));
 });
 
 // Prettify the main js file
-gulp.task('prettify-js', function () {
+gulp.task('prettify-js', function() {
     gulp.src(Assets.js.main)
         .pipe(prettify({
             config: '.jsbeautifyrc',
-            mode: 'VERIFY_AND_WRITE'
+            mode: 'VERIFY_AND_WRITE',
         }))
         .pipe(gulp.dest('./'));
 });
 
 // Compile the main scss (saas) stylesheet
-gulp.task('saas', function () {
+gulp.task('saas', function() {
     return gulp.src(Assets.css.main)
         .pipe(sass(saasSettings))
         .pipe(rename(Assets.css.compiled))
@@ -74,7 +74,7 @@ gulp.task('saas', function () {
 });
 
 // Uglify aka minify the main js file
-gulp.task('uglify', function () {
+gulp.task('uglify', function() {
     return gulp.src('./' + Assets.js.main)
         .pipe(uglify(uglifySettings))
         .pipe(rename(Assets.js.minified))
@@ -82,12 +82,12 @@ gulp.task('uglify', function () {
 });
 
 // Update version numbers based on the main file version comment
-gulp.task('version', function () {
+gulp.task('version', function() {
     // SemVer matching is done using (?:\d+\.){2}\d+
 
     var reVersion = /\n\s*\*\s+Version:\s+((?:\d+\.){2}\d+)/;
     var version = fs.readFileSync('./' + Assets.js.main, {
-            encoding: 'utf8'
+            encoding: 'utf8',
         })
 
         // Match is found in the 2nd element
@@ -103,7 +103,7 @@ gulp.task('version', function () {
 gulp.task('build', ['jshint', 'saas', 'version', 'clean', 'uglify', 'prettify-js']);
 
 // Watch for changes to the js and scss files
-gulp.task('default', function () {
+gulp.task('default', function() {
     gulp.watch('./' + Assets.css.main, ['saas']);
     gulp.watch('./' + Assets.js.main, ['version', 'jshint', 'clean', 'uglify']);
 });
