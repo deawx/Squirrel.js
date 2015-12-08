@@ -13,20 +13,20 @@ var fs = require('fs');
 // Assets for the project
 var Assets = {
     css: {
-        dest: './',
         main: './example.scss',
         compiled: './example.css',
+        source: './',
     },
     js: {
-        dest: './',
         main: './jquery.squirrel.js',
         minified: './jquery.squirrel.min.js',
+        source: './',
     },
     package: './package.json',
 };
 
-// See the saas documentation for more details
-var _saasSettings = {
+// See the sass documentation for more details
+var _sassSettings = {
     // Options are 'nested', 'compact', 'compressed', 'expanded'
     outputStyle: 'compressed',
 };
@@ -64,15 +64,15 @@ gulp.task('prettify-js', function prettifyJSTask() {
             config: '.jsbeautifyrc',
             mode: 'VERIFY_AND_WRITE',
         }))
-        .pipe(gulp.dest(Assets.js.dest));
+        .pipe(gulp.dest(Assets.js.source));
 });
 
-// Compile the main scss (saas) stylesheet
-gulp.task('saas', function saasTask() {
+// Compile the main scss (sass) stylesheet
+gulp.task('sass', function sassTask() {
     return gulp.src(Assets.css.main)
-        .pipe(sass(_saasSettings))
+        .pipe(sass(_sassSettings))
         .pipe(rename(Assets.css.compiled))
-        .pipe(gulp.dest(Assets.css.dest));
+        .pipe(gulp.dest(Assets.css.source));
 });
 
 // Uglify aka minify the main js file
@@ -80,7 +80,7 @@ gulp.task('uglify', function uglifyTask() {
     return gulp.src(Assets.js.main)
         .pipe(uglify(_uglifySettings))
         .pipe(rename(Assets.js.minified))
-        .pipe(gulp.dest(Assets.js.dest));
+        .pipe(gulp.dest(Assets.js.source));
 });
 
 // Update version numbers based on the main file version comment
@@ -99,21 +99,21 @@ gulp.task('version', function versionTask() {
     // package.json version property
     return gulp.src(Assets.package)
         .pipe(replace(/"version":\s+"(?:\d+\.){2}\d+",/, '"version": "' + version + '",'))
-        .pipe(gulp.dest(Assets.js.dest));
+        .pipe(gulp.dest(Assets.js.source));
 });
 
 // Register the default task
-gulp.task('build', ['jshint', 'saas', 'version', 'clean', 'uglify', 'prettify-js']);
+gulp.task('build', ['jshint', 'sass', 'version', 'clean', 'uglify', 'prettify-js']);
 
 // Watch for changes to the js and scss files
 gulp.task('default', function defaultTask() {
-    gulp.watch(Assets.css.main, ['saas']);
+    gulp.watch(Assets.css.main, ['sass']);
     gulp.watch(Assets.js.main, ['version', 'jshint', 'clean', 'uglify']);
 });
 
 // 'gulp build' to invoke all tasks above
 // 'gulp jshint' to check the syntax of the main js file
 // 'gulp prettify-js' to prettify the main js file
-// 'gulp saas' to compile the main scss (saas) file
+// 'gulp sass' to compile the main scss (sass) file
 // 'gulp uglify' to uglify the main js file
 // 'gulp version' to update the version numbers based on the main js file version comment
