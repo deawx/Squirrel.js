@@ -378,4 +378,3 @@
     });
 
 })(window, window.jQuery);
-
