@@ -1,6 +1,8 @@
 /* global require */
 
 var gulp = require('gulp');
+var eslint = require('gulp-eslint');
+var gulpIf = require('gulp-if');
 var jshint = require('gulp-jshint');
 var prettify = require('gulp-jsbeautifier');
 var rename = require('gulp-rename');
@@ -48,6 +50,22 @@ var _uglifySettings = {
 // Clean the current directory
 gulp.task('clean', function clesnTask(cb) {
     del([Assets.js.minified], cb);
+});
+
+// Check the main js file meets the following standards outlined in .eslintrc
+gulp.task('eslint', function esLintTask() {
+    // Has ESLint fixed the file contents?
+    function isFixed(file) {
+        return file.eslint != null && file.eslint.fixed;
+    }
+
+    return gulp.src(Assets.js.main)
+        .pipe(eslint({
+            fix: true,
+            useEslintrc: '.eslintrc',
+        }))
+        .pipe(eslint.format())
+        .pipe(gulpIf(isFixed, gulp.dest(Assets.js.source)));
 });
 
 // Check the main js file meets the following standards outlined in .jshintrc
@@ -103,15 +121,16 @@ gulp.task('version', function versionTask() {
 });
 
 // Register the default task
-gulp.task('build', ['jshint', 'sass', 'version', 'clean', 'uglify', 'prettify-js']);
+gulp.task('build', ['eslint', 'sass', 'version', 'clean', 'uglify']);
 
 // Watch for changes to the js and scss files
 gulp.task('default', function defaultTask() {
     gulp.watch(Assets.css.main, ['sass']);
-    gulp.watch(Assets.js.main, ['version', 'jshint', 'clean', 'uglify']);
+    gulp.watch(Assets.js.main, ['version', 'eslint', 'clean', 'uglify']);
 });
 
 // 'gulp build' to invoke all tasks above
+// 'gulp eslint' to check the syntax of the main js file
 // 'gulp jshint' to check the syntax of the main js file
 // 'gulp prettify-js' to prettify the main js file
 // 'gulp sass' to compile the main scss (sass) file
