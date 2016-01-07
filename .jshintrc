@@ -11,8 +11,6 @@
     "eqnull": false,
     "browser": true,
     "devel": false,
-    "jasmine": true,
     "jquery": true,
-    "node": true,
     "esnext": true
 }
