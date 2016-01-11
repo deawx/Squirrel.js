@@ -69,13 +69,6 @@ gulp.task('eslint', function esLintTask() {
         .pipe(gulpIf(isFixed, gulp.dest(Assets.js.source)));
 });
 
-// Check the main js file meets the following standards outlined in .jshintrc
-gulp.task('jshint', function jsHintTask() {
-    return gulp.src(Assets.js.main)
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'));
-});
-
 // Prettify the main js file
 gulp.task('prettify-js', function prettifyJSTask() {
     gulp.src(Assets.js.main)
@@ -125,7 +118,6 @@ gulp.task('default', function defaultTask() {
 
 // 'gulp build' to invoke all tasks above
 // 'gulp eslint' to check the syntax of the main js file
-// 'gulp jshint' to check the syntax of the main js file
 // 'gulp prettify-js' to prettify the main js file
 // 'gulp sass' to compile the main scss (sass) file
 // 'gulp uglify' to uglify the main js file
