@@ -11,6 +11,7 @@ var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var del = require('del');
 var fs = require('fs');
+var pkg = require('./package.json');
 
 // Assets for the project
 var Assets = {
@@ -105,18 +106,11 @@ gulp.task('uglify', function uglifyTask() {
 gulp.task('version', function versionTask() {
     // SemVer matching is done using (?:\d+\.){2}\d+
 
-    var VERSION_NUMBER = 1;
-    var reVersion = /\n\s*\*\s+Version:\s+((?:\d+\.){2}\d+)/;
-    var version = fs.readFileSync(Assets.js.main, {
-        encoding: 'utf8',
-    })
+    var reVersion = /(?:(\n\s*\*\s+Version:\s+)(?:\d+\.){2}\d+)/;
 
-    // Match is found in the 2nd element
-    .match(reVersion)[VERSION_NUMBER];
-
-    // package.json version property
-    return gulp.src(Assets.package)
-        .pipe(replace(/"version":\s+"(?:\d+\.){2}\d+",/, '"version": "' + version + '",'))
+    // Update the main js file version number
+    return gulp.src(Assets.js.main)
+        .pipe(replace(reVersion, '$1' + pkg.version))
         .pipe(gulp.dest(Assets.js.source));
 });
 
