@@ -3,7 +3,6 @@
 var gulp = require('gulp');
 var eslint = require('gulp-eslint');
 var gulpIf = require('gulp-if');
-var jshint = require('gulp-jshint');
 var prettify = require('gulp-jsbeautifier');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
