@@ -57,7 +57,7 @@ gulp.task('clean', function clesnTask(cb) {
 gulp.task('eslint', function esLintTask() {
     // Has ESLint fixed the file contents?
     function isFixed(file) {
-        return file.eslint != null && file.eslint.fixed;
+        return file.eslint !== undefined && file.eslint !== null && file.eslint.fixed;
     }
 
     return gulp.src(Assets.js.main)
